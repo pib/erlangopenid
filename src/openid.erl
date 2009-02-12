@@ -81,8 +81,8 @@ discover(Identifier) ->
         {ok, {_Status, _Headers, Body}} ->
             HtmlTokens = mochiweb_html:parse(Body),
             [{identifier, NormalizedIdentifier} | find_openid_tags(HtmlTokens)];
-        _ ->
-            {error, http_error}
+        {error, Reason} ->
+            {error, Reason}
     end.
 
 normalize_identifier(Ident = "http://" ++ _Rest) ->
@@ -100,7 +100,7 @@ find_openid_tags(HtmlTokens) ->
                     Server = proplists:get_value(<<"href">>, ServerAttrs),
                     case find_tag_with_attr(<<"link">>, {<<"rel">>, <<"openid.delegate">>}, Children) of
                         not_found ->
-                            [{server, Server}];
+                            [{server, binary_to_list(Server)}];
                         DelegateAttrs ->
                             Delegate = proplists:get_value(<<"href">>, DelegateAttrs),
                             [{server, binary_to_list(Server)},
