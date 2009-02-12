@@ -1,0 +1,8 @@
+An Erlang OpenID module.
+
+Currently implements OpenID 1.1
+
+To use, you call start_authentication with the claimed identifier and a URL to return to, then redirect to the returned URL. 
+
+Upon return, pass a proplist of your GET parameters to finish_authentication, and you will get back {ok, Identifier} or {error, Error}. 
+
